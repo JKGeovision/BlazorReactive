@@ -1,0 +1,39 @@
+﻿@using BlazorReactive.ViewModels;
+@using ReactiveUI;
+@implements IDisposable;
+
+@if (BodyViewModel != null)
+{
+	<div>
+		@BodyViewModel.FilteredItems.Count
+	</div>
+}
+
+@code {
+
+	[Parameter]
+	public BodyViewModel? BodyViewModel { get; set; }
+
+	private IDisposable? _filteredItemsSubscription;
+
+	protected override void OnParametersSet()
+	{
+		if (BodyViewModel != null)
+		{
+			_filteredItemsSubscription = BodyViewModel
+				.WhenAnyValue(x => x.FilteredItems)
+				.Subscribe(_ =>
+				{
+					StateHasChanged();
+				});
+		}
+
+		base.OnParametersSet();
+	}
+
+	public void Dispose()
+	{
+		_filteredItemsSubscription?.Dispose();
+	}
+
+}

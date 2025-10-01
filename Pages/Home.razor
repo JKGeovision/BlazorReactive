@@ -1,0 +1,20 @@
+﻿@using BlazorReactive.ViewModels;
+@page "/"
+
+<Header ViewModel="@_headerViewModel" />
+
+<Body ViewModel="@_bodyViewModel" />
+
+@code {
+
+	private HeaderViewModel _headerViewModel;
+
+	private BodyViewModel _bodyViewModel;
+
+	public Home()
+	{
+		_headerViewModel = new HeaderViewModel();
+		_bodyViewModel = new BodyViewModel(_headerViewModel);
+	}
+
+}

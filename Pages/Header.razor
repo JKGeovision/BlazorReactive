@@ -1,0 +1,14 @@
+﻿@using BlazorReactive.ViewModels;
+@using ReactiveUI;
+@using ReactiveUI.Blazor;
+@inherits ReactiveComponentBase<HeaderViewModel>;
+
+@if (ViewModel != null)
+{
+	<input
+		type="text"
+		placeholder="Type something..."
+		@bind="@ViewModel.Filter"
+		@bind:event="oninput"
+	/>
+}
