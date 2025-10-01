@@ -18,7 +18,7 @@
 
 	protected override void OnParametersSet()
 	{
-		if (BodyViewModel != null)
+		if (BodyViewModel != null && _filteredItemsSubscription == null)
 		{
 			_filteredItemsSubscription = BodyViewModel
 				.WhenAnyValue(x => x.FilteredItems)

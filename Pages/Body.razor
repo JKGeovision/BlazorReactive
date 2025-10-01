@@ -1,7 +1,8 @@
 ﻿@using BlazorReactive.ViewModels;
 @using ReactiveUI;
 @using ReactiveUI.Blazor;
-@inherits ReactiveComponentBase<BodyViewModel>;
+@implements IViewFor<BodyViewModel>;
+@implements IDisposable;
 
 @if (ViewModel != null)
 {
@@ -18,24 +19,33 @@
 
 @code {
 
+	[Parameter]
+	public BodyViewModel? ViewModel { get; set; }
+
+	object? IViewFor.ViewModel { get => ViewModel; set => ViewModel = (BodyViewModel?)value; }
+
+	private bool _reactive = true; // false setzen, damit die Liste nicht bei Änderungen neu gerendert wird
+
 	private IDisposable? _filteredItemsSubscription;
 
 	protected override void OnParametersSet()
 	{
-		_filteredItemsSubscription = ViewModel
-			.WhenAnyValue(x => x.FilteredItems)
-			.Subscribe(_ =>
-			{
-				StateHasChanged();
-			});
+		if (_reactive && _filteredItemsSubscription == null)
+		{
+			_filteredItemsSubscription = ViewModel
+				.WhenAnyValue(x => x.FilteredItems)
+				.Subscribe(_ =>
+				{
+					StateHasChanged();
+				});
+		}
 
 		base.OnParametersSet();
 	}
 
-	protected override void Dispose(bool disposing)
+	public void Dispose()
 	{
 		_filteredItemsSubscription?.Dispose();
-		base.Dispose(disposing);
 	}
 
 }
