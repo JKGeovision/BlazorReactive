@@ -1,9 +1,17 @@
 ﻿@using BlazorReactive.ViewModels;
 @page "/"
 
-<Header ViewModel="@_headerViewModel" />
+<Header
+	ViewModel="@_headerViewModel"
+	RenderCountViewModel="@_renderCountViewModel"
+/>
 
-<Body ViewModel="@_bodyViewModel" />
+<Body
+	ViewModel="@_bodyViewModel"
+	RenderCountViewModel="@_renderCountViewModel"
+/>
+
+<RenderCount ViewModel="@_renderCountViewModel" />
 
 @code {
 
@@ -11,10 +19,15 @@
 
 	private BodyViewModel _bodyViewModel;
 
+	private RenderCountViewModel _renderCountViewModel;
+
 	public Home()
 	{
 		_headerViewModel = new HeaderViewModel();
 		_bodyViewModel = new BodyViewModel(_headerViewModel);
+		_renderCountViewModel = new RenderCountViewModel();
 	}
+
+	protected override bool ShouldRender() => false;
 
 }

@@ -5,10 +5,30 @@
 
 @if (ViewModel != null)
 {
+	<button @onclick="@(_ => ViewModel.SidebarExpanded = !ViewModel.SidebarExpanded)">
+		Toggle Sidebar
+	</button>
+
 	<input
 		type="text"
 		placeholder="Type something..."
 		@bind="@ViewModel.Filter"
 		@bind:event="oninput"
 	/>
+}
+
+@code {
+
+	[Parameter]
+	public RenderCountViewModel? RenderCountViewModel { get; set; }
+
+	protected override void OnAfterRender(bool firstRender)
+	{
+		if (RenderCountViewModel != null)
+		{
+			RenderCountViewModel.HeaderRenderCount++;
+		}
+		base.OnAfterRender(firstRender);
+	}
+
 }

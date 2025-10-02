@@ -4,8 +4,11 @@
 
 @if (BodyViewModel != null)
 {
-	<div>
-		@(BodyViewModel.SidebarExpanded ? BodyViewModel.FilteredItems.Count : string.Empty)
+	<div style="display: flex; flex-direction: column; gap: 1rem;">
+		@foreach (string item in BodyViewModel.FilteredItems)
+		{
+			<div>@item</div>
+		}
 	</div>
 }
 
@@ -19,21 +22,12 @@
 
 	private IDisposable? _filteredItemsSubscription;
 
-	private IDisposable? _sidebarExpandedSubscription;
-
 	protected override void OnParametersSet()
 	{
-		if (BodyViewModel != null && _filteredItemsSubscription == null && _sidebarExpandedSubscription == null)
+		if (BodyViewModel != null && _filteredItemsSubscription == null)
 		{
 			_filteredItemsSubscription = BodyViewModel
 				.WhenAnyValue(x => x.FilteredItems)
-				.Subscribe(_ =>
-				{
-					StateHasChanged();
-				});
-
-			_sidebarExpandedSubscription = BodyViewModel
-			.WhenAnyValue(x => x.SidebarExpanded)
 				.Subscribe(_ =>
 				{
 					StateHasChanged();
@@ -47,7 +41,7 @@
 	{
 		if (RenderCountViewModel != null)
 		{
-			RenderCountViewModel.BodySidebarRenderCount++;
+			RenderCountViewModel.BodyListRenderCount++;
 		}
 		base.OnAfterRender(firstRender);
 	}

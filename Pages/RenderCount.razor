@@ -1,0 +1,13 @@
+﻿@using BlazorReactive.ViewModels;
+@using ReactiveUI.Blazor;
+@inherits ReactiveComponentBase<RenderCountViewModel>;
+
+@if (ViewModel != null)
+{
+	<div style="position: fixed; top: 1rem; right: 1rem;">
+		<div>HeaderRenderCount: @ViewModel.HeaderRenderCount</div>
+		<div>BodyRenderCount @ViewModel.BodyRenderCount</div>
+		<div>BodyListRenderCount @ViewModel.BodyListRenderCount</div>
+		<div>BodySidebarRenderCount @ViewModel.BodySidebarRenderCount</div>
+	</div>
+}

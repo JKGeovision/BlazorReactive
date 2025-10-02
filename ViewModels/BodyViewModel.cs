@@ -12,7 +12,12 @@ public partial class BodyViewModel : ReactiveObject, IDisposable
     [Reactive]
     private ReadOnlyObservableCollection<string> _filteredItems = new([]);
 
+    [Reactive]
+    private bool _sidebarExpanded = true;
+
     private IDisposable _filterSubscription;
+
+    private IDisposable _sidebarExpandedSubscription;
 
     public BodyViewModel(HeaderViewModel headerViewModel)
     {
@@ -30,11 +35,19 @@ public partial class BodyViewModel : ReactiveObject, IDisposable
                 FilteredItems = new(new(Items.Where(item => item.Contains(filter))));
             });
 
+        _sidebarExpandedSubscription = headerViewModel
+            .WhenAnyValue(x => x.SidebarExpanded)
+            .Subscribe(expanded =>
+            {
+                SidebarExpanded = expanded;
+            });
+
         Items = new(Enumerable.Range(1, 100).Select(index => $"item {index}"));
     }
 
     public void Dispose()
     {
         _filterSubscription.Dispose();
+        _sidebarExpandedSubscription.Dispose();
     }
 }

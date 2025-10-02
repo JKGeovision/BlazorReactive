@@ -1,51 +1,36 @@
 ﻿@using BlazorReactive.ViewModels;
 @using ReactiveUI;
 @using ReactiveUI.Blazor;
-@implements IViewFor<BodyViewModel>;
-@implements IDisposable;
+@inherits ReactiveComponentBase<BodyViewModel>;
 
 @if (ViewModel != null)
 {
 	<div style="display: flex; flex-direction: row; gap: 1rem;">
-		<BodySidebar BodyViewModel="@ViewModel" />
-		<div style="display: flex; flex-direction: column; gap: 1rem;">
-			@foreach (string item in ViewModel.FilteredItems)
-			{
-				<div>@item</div>
-			}
-		</div>
+		<BodySidebar
+			BodyViewModel="@ViewModel"
+			RenderCountViewModel="@RenderCountViewModel"
+		/>
+		<BodyList
+			BodyViewModel="@ViewModel"
+			RenderCountViewModel="@RenderCountViewModel"
+		/>
 	</div>
 }
 
 @code {
 
 	[Parameter]
-	public BodyViewModel? ViewModel { get; set; }
+	public RenderCountViewModel? RenderCountViewModel { get; set; }
 
-	object? IViewFor.ViewModel { get => ViewModel; set => ViewModel = (BodyViewModel?)value; }
-
-	private bool _reactive = true; // false setzen, damit die Liste nicht bei Änderungen neu gerendert wird
-
-	private IDisposable? _filteredItemsSubscription;
-
-	protected override void OnParametersSet()
+	protected override void OnAfterRender(bool firstRender)
 	{
-		if (_reactive && _filteredItemsSubscription == null)
+		if (RenderCountViewModel != null)
 		{
-			_filteredItemsSubscription = ViewModel
-				.WhenAnyValue(x => x.FilteredItems)
-				.Subscribe(_ =>
-				{
-					StateHasChanged();
-				});
+			RenderCountViewModel.BodyRenderCount++;
 		}
-
-		base.OnParametersSet();
+		base.OnAfterRender(firstRender);
 	}
 
-	public void Dispose()
-	{
-		_filteredItemsSubscription?.Dispose();
-	}
+	protected override bool ShouldRender() => false;
 
 }
